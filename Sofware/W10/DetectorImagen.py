@@ -4,7 +4,7 @@ from datetime import date
 from datetime import datetime
 import os
 
-from time import sleep
+
 import os
 import time
 
@@ -26,7 +26,7 @@ def ProcesarImagen(imagen, direccionCarpeta):
               print (imagen)
               img = cv2.imread(imagen)
               height, width = img.shape[:2]
-              print("llego")
+              #print("llego")
              
               gris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
               gauss = cv2.medianBlur(gris,13)
@@ -50,6 +50,8 @@ def ProcesarImagen(imagen, direccionCarpeta):
               anchoCable=215
               relacionPixel=2/anchoCable
               print(anchoCable)
+              print("Mayor: %d" % puntoMayor)
+              print("Menor: %d" % puntoMenor)
               print(str(puntoMenor*relacionPixel)+' mm')
               
               mat_datos_x.clear()
@@ -68,7 +70,9 @@ def ProcesarImagen(imagen, direccionCarpeta):
 
 #************************************ Main ************************************
 
-direccionCarpeta = "C:/Users/Ivan/Desktop/Milton Muñoz/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/"
+#direccionCarpeta = "C:/Users/Ivan/Desktop/Milton Muñoz/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/"
+direccionCarpeta = "C:/Users/milto/Milton/RSA/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/"
+
 nombreArchivo = input("Ingrese el nombre de la foto: ")
 
 imagen = direccionCarpeta + nombreArchivo + ".jpg"
