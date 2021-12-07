@@ -9,7 +9,7 @@ import os
 import time
 
 
-print(str(time.strftime("%H"))+":"+str(time.strftime("%M"))+":"+str(time.strftime("%S")))
+#print(str(time.strftime("%H"))+":"+str(time.strftime("%M"))+":"+str(time.strftime("%S")))
 
 
 #********************************** Metodos ***********************************
@@ -23,7 +23,6 @@ def ProcesarImagen(imagen, direccionCarpeta):
        ####################-Procesamiento de Imagen-##########################
        #######################################################################
               
-              print (imagen)
               img = cv2.imread(imagen)
               height, width = img.shape[:2]
               #print("llego")
@@ -41,18 +40,21 @@ def ProcesarImagen(imagen, direccionCarpeta):
 
               for i in range(a):
                      cv2.line(gauss, (lines[i][0][0], lines[i][0][1]), (lines[i][0][2], lines[i][0][3]), (0, 0, 255), 3, cv2.LINE_AA)
-                     print(lines[i][0][0], lines[i][0][1], lines[i][0][2], lines[i][0][3])
+                     #print(lines[i][0][0], lines[i][0][1], lines[i][0][2], lines[i][0][3])
                      mat_datos_x.append(lines[i][0][0])
                      cv2.imwrite(direccionCarpeta+'lineasMarcadas.jpg',gauss)
 
-              puntoMayor=max(mat_datos_x)
-              puntoMenor=min(mat_datos_x)
-              anchoCable=215
-              relacionPixel=2/anchoCable
-              print(anchoCable)
-              print("Mayor: %d" % puntoMayor)
-              print("Menor: %d" % puntoMenor)
-              print(str(puntoMenor*relacionPixel)+' mm')
+              puntoMayor = max(mat_datos_x)
+              puntoMenor = min(mat_datos_x)
+              #anchoCable=215
+              anchoCable = puntoMayor - puntoMenor
+              relacionPixel = 2/anchoCable
+              
+              print("Borde menor [px]: %d" % puntoMenor)
+              print("Borde mayor [px]: %d" % puntoMayor)
+              print("Grosor del cable [px]: %d" % anchoCable)
+              print("Relacion mm/px: %f" % relacionPixel)
+              print("Posicion borde menor [mm]: %f" % (puntoMenor*relacionPixel))
               
               mat_datos_x.clear()
 
@@ -70,12 +72,13 @@ def ProcesarImagen(imagen, direccionCarpeta):
 
 #************************************ Main ************************************
 
-#direccionCarpeta = "C:/Users/Ivan/Desktop/Milton Muñoz/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/"
-direccionCarpeta = "C:/Users/milto/Milton/RSA/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/"
+direccionCarpeta = "D:/Proyecto Chanlud/Analisis/Coordinometros/fotos/"
+#direccionCarpeta = "C:/Users/milto/Milton/RSA/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/"
 
 nombreArchivo = input("Ingrese el nombre de la foto: ")
 
 imagen = direccionCarpeta + nombreArchivo + ".jpg"
+#imagen = "Foto1.jpg"
               
 ProcesarImagen(imagen,direccionCarpeta)
 
