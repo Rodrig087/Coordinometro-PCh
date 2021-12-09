@@ -79,7 +79,8 @@ def ProcesarImagen(imagen, direccionCarpeta, horaFecha):
 
               puntoMayor=max(mat_datos_x)
               puntoMenor=min(mat_datos_x)
-              anchoCable=215
+              #anchoCable=215
+              anchoCable = puntoMayor - puntoMenor
               relacionPixel=2/anchoCable
               print(anchoCable)
               print(str(puntoMenor*relacionPixel)+' mm')
@@ -104,29 +105,29 @@ direccionCarpeta='/home/pi/ProcesamientoCoordinoscopio/Fotos/'
 imagenTomada,horaFecha=TomarFotografia(direccionCarpeta)
 ProcesarImagen(imagenTomada,direccionCarpeta,horaFecha)
 
-while True:
+# while True:
        
-       fecha=time.strftime("%d-%m-%y")
-       horas=time.strftime("%H")
-       minutos=time.strftime("%M")
-       segundos=time.strftime("%S")
+       # fecha=time.strftime("%d-%m-%y")
+       # horas=time.strftime("%H")
+       # minutos=time.strftime("%M")
+       # segundos=time.strftime("%S")
        
-       if str(minutos) != "05":
-              bandera=True
+       # if str(minutos) != "05":
+              # bandera=True
               
-       if (str(minutos) == "05" and str(segundos) == "00" and bandera==True):  
+       # if (str(minutos) == "05" and str(segundos) == "00" and bandera==True):  
               
-              print(str(time.strftime("%H"))+":"+str(time.strftime("%M"))+":"+str(time.strftime("%S")))
+              # print(str(time.strftime("%H"))+":"+str(time.strftime("%M"))+":"+str(time.strftime("%S")))
               
-              now = datetime.now()
-              #os.mkdir('/home/pi/ProcesamientoCoordinoscopio/'+str(now)+'/')
+              # now = datetime.now()
+              # os.mkdir('/home/pi/ProcesamientoCoordinoscopio/'+str(now)+'/')
 
-              fecha=time.strftime("%d-%m-%y")
-              hora=time.strftime("%H:%M:%S")
-              direccionCarpeta='/home/pi/ProcesamientoCoordinoscopio/Fotos/'
+              # fecha=time.strftime("%d-%m-%y")
+              # hora=time.strftime("%H:%M:%S")
+              # direccionCarpeta='/home/pi/ProcesamientoCoordinoscopio/Fotos/'
               
-              imagenTomada,horaFecha=TomarFotografia(direccionCarpeta)
-              ProcesarImagen(imagenTomada,direccionCarpeta,horaFecha)
+              # imagenTomada,horaFecha=TomarFotografia(direccionCarpeta)
+              # ProcesarImagen(imagenTomada,direccionCarpeta,horaFecha)
               
-              bandera=False
+              # bandera=False
               
