@@ -37,12 +37,13 @@ def ProcesarImagen(imagen, direccionCarpeta):
               canny = cv2.Canny(gauss, 10, 30)
                             
               lines = cv2.HoughLinesP(image=canny,rho=1,theta=np.pi/180, threshold=100,lines=np.array([]), minLineLength=180,maxLineGap=100)
+              
               a,b,c = lines.shape
               
               for i in range(a):
                      cv2.line(gauss, (lines[i][0][0], lines[i][0][1]), (lines[i][0][2], lines[i][0][3]), (0, 255, 0), 3, cv2.LINE_AA)
                      mat_datos_x.append(lines[i][0][0])
-                     cv2.imwrite(direccionCarpeta+'lineasMarcadas.jpg',gauss)
+                     cv2.imwrite(direccionCarpeta+'lineasMarcadas.jpg',img)
 
               puntoMayor = max(mat_datos_x)
               puntoMenor = min(mat_datos_x)
@@ -74,10 +75,11 @@ def ProcesarImagen(imagen, direccionCarpeta):
 
 #************************************ Main ************************************
 
-direccionCarpeta = 'C:/Users/milto/Milton/RSA/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/prueba/'
+#direccionCarpeta = 'C:/Users/milto/Milton/RSA/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/prueba/'
+direccionCarpeta = 'C:/Users/RSA-Milton/Desktop/Coordinometros/Fotos/IZQ/IZQ-N2-X/'
 
 #nombreArchivo = input("Ingrese el nombre de la foto: ")
-nombreArchivo = '2023-04-13 11_44_11.712927' 
+nombreArchivo = '2023-05-05 00_00_10.522579' 
 
 imagen = direccionCarpeta + nombreArchivo + ".jpg"
 #imagen = "Foto1.jpg"
