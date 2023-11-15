@@ -115,8 +115,7 @@ def ProcesarImagen(Imagen, pathImagen, pathDatos):
               
  # /////////////////////////////////////////////////////////////////////////////
 
-
-
+'''
 def Procesar(Imagen, pathImagen, pathDatos):
        
     pathFoto =  pathImagen+Imagen 
@@ -172,6 +171,65 @@ def Procesar(Imagen, pathImagen, pathDatos):
      
     print(str(tiempoImagen_str) + ' ' + str(puntoMenor) + ' ' + str(puntoMayor))
 
+'''
+
+def Procesar(Imagen, pathImagen, pathDatos):
+    pathFoto = pathImagen + Imagen
+    mat_datos_x = []
+    puntoMenor = 0
+
+    global bordeMenorAnterior
+    global desfaceAnterior
+    global contadorErrores
+    global contadorArchivosProcesados
+    global contadorArchivosSinProcesar
+
+    tiempoImagen = Imagen[0:19]
+    tiempoImagen_dt = datetime.strptime(tiempoImagen, '%Y-%m-%d %H_%M_%S')
+    tiempoImagen_str = tiempoImagen_dt.strftime('%Y-%m-%dT%H:%M:%S')
+
+    try:
+        img = cv2.imread(pathFoto)
+        height, width = img.shape[:2]
+        gris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gauss = cv2.medianBlur(gris, 13)
+
+        # Define los pares de umbrales para probar con Canny
+        canny_thresholds = [(20, 60), (20, 40), (10, 30), (10, 20)]
+        lines_found = False
+
+        for thresholds in canny_thresholds:
+            if not lines_found:
+                canny = cv2.Canny(gauss, thresholds[0], thresholds[1])
+                lines = cv2.HoughLinesP(image=canny, rho=1, theta=np.pi / 180, threshold=100, lines=np.array([]),
+                                        minLineLength=180, maxLineGap=100)
+                if lines is not None:
+                    lines_found = True
+                    a, b, c = lines.shape
+                    for i in range(a):
+                        cv2.line(img, (lines[i][0][0], lines[i][0][1]), (lines[i][0][2], lines[i][0][3]), (0, 255, 0), 3,
+                                 cv2.LINE_AA)
+                        mat_datos_x.append(lines[i][0][0])
+                    # Guardar la imagen después de procesar todas las líneas
+                    cv2.imwrite(pathImagen + 'tmp/' + Imagen + '.jpg', img)
+                    puntoMayor = max(mat_datos_x)
+                    puntoMenor = min(mat_datos_x)
+                    contadorArchivosProcesados += 1
+                    break  # Salir del bucle si se han encontrado líneas
+
+        if not lines_found:
+            # Si no se encontraron líneas con ninguno de los umbrales, proceder con la lógica de error
+            puntoMayor = 'null'
+            puntoMenor = 'null'
+            contadorErrores += 1
+
+    except Exception as e:
+        print(f"Error al procesar la imagen {Imagen}: {e}")
+        puntoMayor = 'null'
+        puntoMenor = 'null'
+        contadorArchivosSinProcesar += 1
+
+    print(str(tiempoImagen_str) + ' ' + str(puntoMenor) + ' ' + str(puntoMayor))
     
 
 
@@ -185,13 +243,13 @@ if __name__ == '__main__':
     #directorioFotos= 'C:/Users/milto/Milton/RSA/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/IZQ/IZQ-N2-X/2023/'
     #directorioDatos = 'C:/Users/milto/Milton/RSA/Proyectos/Proyecto Chanlud/Analisis/Coordinometros/Fotos/IZQ/IZQ-N2-X/'
     # PC
-    directorioFotos = 'C:/Users/RSA-Milton/Desktop/Coordinometros/Fotos/IZQ/IZQ-N2-X/2023/'
-    directorioDatos = 'C:/Users/RSA-Milton/Desktop/Coordinometros/Fotos/IZQ/IZQ-N2-X/'
+    directorioFotos = 'C:/Users/RSA-Milton/Desktop/Coordinometros/Fotos/IZQ/IZQ-N1-X/2022/'
+    directorioDatos = 'C:/Users/RSA-Milton/Desktop/Coordinometros/Fotos/IZQ/IZQ-N1-X/'
     #******************************************************************************
     #Obtiene el nombre de todas las fotos del directorio:
     listaArchivos = os.listdir(directorioFotos)
     listaArchivosOrdenada = sorted(listaArchivos) 
-    listaArchivosOrdenada = listaArchivosOrdenada[0:(len(listaArchivosOrdenada))]
+    listaArchivosOrdenada = listaArchivosOrdenada[0:(len(listaArchivosOrdenada)-1)]
     #print(listaArchivosOrdenada)
     #******************************************************************************
     # Procesa las fotos una por una    
