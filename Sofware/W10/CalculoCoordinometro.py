@@ -8,7 +8,7 @@ import time
 
 # ////////////////////////////////// Metodos //////////////////////////////////
 
-def ProcesarImagen(Imagen, idCoor, pathImagen, pathDatos):
+def ProcesarImagen(Imagen, idCoor, anio, pathImagen, pathDatos):
     pathFoto = pathImagen + Imagen
     mat_datos_x = []
     puntoMenor = 0
@@ -50,47 +50,51 @@ def ProcesarImagen(Imagen, idCoor, pathImagen, pathDatos):
                     cv2.imwrite(pathImagen + 'tmp/' + Imagen + '.jpg', img)
                     puntoMayor = max(mat_datos_x)
                     puntoMenor = min(mat_datos_x)
+                    grosorPx = puntoMayor - puntoMenor
                     contadorArchivosProcesados += 1
-                    if (puntoMayor<(puntoMenor+20)):
+                    if (puntoMayor<(puntoMenor+50)):
                         contadorBordeUnico +=1
                         # Escribir los archivos con borde unico en un archivo de texto
                         archivo_uniborde = os.path.join(pathDatos, f"{idCoor}_uni-borde.txt")
                         with open(archivo_uniborde, 'a') as archivo:
                             archivo.write(foto + '\n')
+                        # Obtien la media de un borde difuso
+                        if (puntoMayor<(puntoMenor+25)):
+                            grosorPx = 'null'
+                            mediaBordeDifuso = (puntoMayor-puntoMenor)/2
+                            puntoMenor = puntoMenor+int(mediaBordeDifuso)
+                            puntoMayor = puntoMenor
                     break  # Salir del bucle si se han encontrado líneas
 
         if not lines_found:
             # Si no se encontraron líneas con ninguno de los umbrales, proceder con la lógica de error
             puntoMayor = 'null'
             puntoMenor = 'null'
+            grosorPx = 'null'
             contadorErrores += 1
             # Escribir los archivos con sin bordes en un archivo de texto
             archivo_sinborde = os.path.join(pathDatos, f"{idCoor}_sin-borde.txt")
             with open(archivo_sinborde, 'a') as archivo:
                 archivo.write(foto + '\n')
+                
+        resultado = "{} {} {} {}".format(tiempoImagen_str, puntoMenor, puntoMayor, grosorPx)
+        print(resultado)
+        # Escribir el resultado en un archivo de texto
+        archivo_resultado = os.path.join(pathDatos, f"{idCoor}_{anio}.txt")
+        with open(archivo_resultado, 'a') as archivo:
+            archivo.write(resultado + '\n')
 
     except Exception as e:
         print(f"Error al procesar la imagen {Imagen}: {e}")
         puntoMayor = 'null'
         puntoMenor = 'null'
+        grosorPx = 'null'
         contadorArchivosSinProcesar += 1
         # Escribir los archivos con sin procesar en un archivo de texto
         archivo_sinprocesar = os.path.join(pathDatos, f"{idCoor}_sin-procesar.txt")
         with open(archivo_sinprocesar, 'a') as archivo:
             archivo.write(foto + '\n')
 
-    #print(str(tiempoImagen_str) + ' ' + str(puntoMenor) + ' ' + str(puntoMayor))
-    resultado = "{} {} {}".format(tiempoImagen_str, puntoMenor, puntoMayor)
-    print(resultado)
-    # Escribir el resultado en un archivo de texto
-    archivo_resultado = os.path.join(pathDatos, f"{idCoor}.txt")
-    with open(archivo_resultado, 'a') as archivo:
-        archivo.write(resultado + '\n')
-        
-    
-
-
-    return resultado
     
 
 def DeteccionVertical(Imagen, pathImagen, pathDatos):
@@ -156,7 +160,7 @@ if __name__ == '__main__':
     
     #******************************************************************************
     eje = 'IZQ'
-    idEstacion = 'IZQ-N2-Y'
+    idEstacion = 'IZQ-N3-Y'
     anio = '2023'
     #******************************************************************************  
     directorioFotos = 'C:/Users/RSA-Milton/Desktop/Coordinometros/Fotos/' + eje + '/' + idEstacion + '/' + anio + '/'
@@ -177,7 +181,7 @@ if __name__ == '__main__':
     contadorBordeUnico = 0
     
     for foto in listaArchivosOrdenada:
-        ProcesarImagen(foto, idEstacion, directorioFotos, directorioDatos)
+        ProcesarImagen(foto, idEstacion, anio, directorioFotos, directorioDatos)
         
     #archivoMediciones.close()
         
