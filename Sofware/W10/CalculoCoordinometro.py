@@ -159,8 +159,8 @@ def DeteccionVertical(Imagen, pathImagen, pathDatos):
 if __name__ == '__main__':
     
     #******************************************************************************
-    eje = 'IZQ'
-    idEstacion = 'IZQ-N3-Y'
+    eje = 'DER'
+    idEstacion = 'DER-N3-Y'
     anio = '2023'
     #******************************************************************************  
     directorioFotos = 'C:/Users/RSA-Milton/Desktop/Coordinometros/Fotos/' + eje + '/' + idEstacion + '/' + anio + '/'
